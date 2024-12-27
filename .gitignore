@@ -1,0 +1,17 @@
+# Ignore Python cache files
+__pycache__/
+
+# Ignore Python virtual environments
+venv/
+env/
+envs/
+
+# Ignore VSCode settings
+.vscode/
+.vs/
+
+# Ignore specific files
+Brawler.zip
+LICENSE
+image1.png
+image2.png
