@@ -28,7 +28,7 @@ YELLOW = (255, 255, 0)
 WHITE = (255, 255, 255)
 
 # Game variables
-intro_count = 3
+intro_count = 4
 last_count_update = pygame.time.get_ticks()
 score = [0, 0]
 round_over = False
@@ -45,9 +45,9 @@ WIZARD_OFFSET = [112, 107]
 WIZARD_DATA = [WIZARD_SIZE, WIZARD_SCALE, WIZARD_OFFSET]
 
 # Music and sound effects
-pygame.mixer.music.load("assets/audio/music.mp3")
-pygame.mixer.music.set_volume(0.5)
-pygame.mixer.music.play(-1, 0.0, 5000)
+#pygame.mixer.music.load("assets/audio/music.mp3")
+#pygame.mixer.music.set_volume(0.5)
+#pygame.mixer.music.play(-1, 0.0, 5000)
 sword_fx = pygame.mixer.Sound("assets/audio/sword.wav")
 sword_fx.set_volume(0.5)
 magic_fx = pygame.mixer.Sound("assets/audio/magic.wav")
@@ -55,6 +55,7 @@ magic_fx.set_volume(0.75)
 
 # Background image
 bg_image = pygame.image.load("assets/images/background/background2.jpeg").convert_alpha()
+win_bg_image = pygame.image.load("assets/images/background/win_screen.jpg").convert_alpha()
 
 # Spritesheets for the fighters
 warrior_sheet = pygame.image.load("assets/images/warrior/Sprites/warrior.png").convert_alpha()
@@ -78,6 +79,11 @@ def draw_text(text, font, text_col, x, y):
 # Function for drawing background
 def draw_bg():
     scaled_bg = pygame.transform.scale(bg_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+    screen.blit(scaled_bg, (0, 0))
+
+# Function for drawing victory screen
+def draw_win_bg():
+    scaled_bg = pygame.transform.scale(win_bg_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
     screen.blit(scaled_bg, (0, 0))
 
 # Function for drawing health bar
@@ -177,17 +183,32 @@ while run:
             score[1] += 1
             round_over = True
             round_over_time = pygame.time.get_ticks()
+            scaled_box_image_1.fill((0, 0, 0, 0))
         elif not fighter_2.alive:
             score[0] += 1
             round_over = True
             round_over_time = pygame.time.get_ticks()
+            scaled_box_image_2.fill((0, 0, 0, 0))
     else:
         screen.blit(victory_img, (360, 150))
         if pygame.time.get_ticks() - round_over_time > ROUND_OVER_COOLDOWN:
-            round_over = False
-            intro_count = 3
-            fighter_1 = Fighter(1, 200, 310, False, WARRIOR_DATA, warrior_sheet, WARRIOR_ANIMATION_STEPS, sword_fx)
-            fighter_2 = Fighter(2, 700, 310, True, WIZARD_DATA, wizard_sheet, WIZARD_ANIMATION_STEPS, magic_fx)
+            if score[0] + score[1] == 3:
+                draw_win_bg()
+
+                if score[0] > score[1]:
+                    win_player = pygame.transform.scale(pygame.image.load("image1.png").convert(), (200, 200))
+                else:
+                    win_player = pygame.transform.scale(pygame.image.load("image2.png").convert(), (200, 200))
+                
+                screen.blit(win_player, win_player.get_rect(center = screen.get_rect().center))
+                draw_text(f"Player {1 if score[0] > score[1] else 2}", count_font, RED, 370, 400)
+            else:
+                round_over = False
+                intro_count = 4
+                fighter_1 = Fighter(1, 200, 310, False, WARRIOR_DATA, warrior_sheet, WARRIOR_ANIMATION_STEPS, sword_fx)
+                fighter_2 = Fighter(2, 700, 310, True, WIZARD_DATA, wizard_sheet, WIZARD_ANIMATION_STEPS, magic_fx)
+                scaled_box_image_1 = pygame.transform.scale(box_image_1, (box_size, box_size))
+                scaled_box_image_2 = pygame.transform.scale(box_image_2, (box_size, box_size))
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
