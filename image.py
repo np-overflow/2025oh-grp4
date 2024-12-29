@@ -1,8 +1,9 @@
 # photo_selector_with_camera.py
 import tkinter as tk
-from tkinter import Label, Canvas, Button
+from tkinter import *
 from PIL import Image, ImageTk
 import cv2
+import subprocess
 
 class PhotoSelectorApp:
     def __init__(self, root, filepath):
@@ -83,11 +84,36 @@ def create_ui(filepath):
     root.title("Photo Selector for Player 1")
     root.geometry("800x600")  # Fixed size
     root.resizable(False, False)
+    centre_window(root)
     app = PhotoSelectorApp(root, filepath)
     root.mainloop()
 
     return f"{filepath}"
 
+def centre_window(window):
+    window.update_idletasks()
+    width = window.winfo_width()
+    height = window.winfo_height()
+    screen_width = window.winfo_screenwidth()
+    screen_height = window.winfo_screenheight()
+    x = (screen_width - width) // 2
+    y = (screen_height - height) // 2
+    window.geometry(f"{width}x{height}+{x}+{y}")
+
+def main_screen():
+    root = tk.Tk()
+    root.title("Main Menu")
+    root.geometry("800x600")  # Fixed size
+    #root.resizable(False, False)
+    centre_window(root)
+
+    # Create a button to start the photo selection process
+    button = Button(root, text="START", font=("Segoe UI", 20), command=lambda: subprocess.run(["python", "main.py"]))
+    button.place(relx=0.5, rely=0.5, anchor=CENTER)
+    #button.pack()
+
+    root.mainloop()
+
 
 if __name__ == "__main__":
-    create_ui()
+    main_screen()
