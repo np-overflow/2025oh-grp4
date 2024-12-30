@@ -4,7 +4,7 @@ from pygame import mixer
 from fighter import Fighter
 import math
 from image import create_ui  # Import the photo selector
-
+from comfyui_client import main
 # remove imaege1.png and image2.png
 
 
@@ -120,9 +120,13 @@ else:
 fighter_1 = Fighter(1, 200, 310, False, WARRIOR_DATA, warrior_sheet, WARRIOR_ANIMATION_STEPS, sword_fx)
 fighter_2 = Fighter(2, 700, 310, True, WIZARD_DATA, wizard_sheet, WIZARD_ANIMATION_STEPS, magic_fx)
 
+# Process the photo image for the fighters
+main(photo_path_1,"image1_processed.png")
+main(photo_path_2,"image2_processed.png")
+
 # Load the image for the box
-box_image_1 = pygame.image.load("image1.png").convert_alpha()
-box_image_2 = pygame.image.load("image2.png").convert_alpha()
+box_image_1 = pygame.image.load("image1_processed.png").convert_alpha()
+box_image_2 = pygame.image.load("image2_processed.png").convert_alpha()
 box_size = 50
 scaled_box_image_1 = pygame.transform.scale(box_image_1, (box_size, box_size))
 scaled_box_image_2 = pygame.transform.scale(box_image_2, (box_size, box_size))
