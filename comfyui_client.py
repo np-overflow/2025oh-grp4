@@ -498,7 +498,7 @@ class ComfyUIClient:
 def main(image_path,output_path):
     # Initialize client
     client_id = "client_123"  # replace with actual client ID
-    server_address = "127.0.0.1:8188"  # replace with the server address
+    server_address = "overflow.orangegroup.systems"  # replace with the server address
     client = ComfyUIClient(server_address, client_id, output_path)
     
     try:
