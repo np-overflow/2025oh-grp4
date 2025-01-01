@@ -13,8 +13,8 @@ prompt_text = r"""
 {
   "3": {
     "inputs": {
-      "seed": 430456559193857,
-      "steps": 50,
+      "seed": 757104452853590,
+      "steps": 40,
       "cfg": 12,
       "sampler_name": "euler_ancestral",
       "scheduler": "karras",
@@ -43,7 +43,7 @@ prompt_text = r"""
   },
   "4": {
     "inputs": {
-      "ckpt_name": "SDXL\\sd_xl_base_1.0.safetensors"
+      "ckpt_name": "sd_xl_base_1.0.safetensors"
     },
     "class_type": "CheckpointLoaderSimple",
     "_meta": {
@@ -68,7 +68,7 @@ prompt_text = r"""
   },
   "7": {
     "inputs": {
-      "text": "low quality, blurry, deformed, watermark, text, signature, depth of field, photoreal, realistic, closed_eyes, old, wrinkles",
+      "text": "low quality, blurry, deformed, watermark, text, signature, depth of field, photoreal, realistic, closed_eyes, old, wrinkles, red lips",
       "clip": [
         "39",
         1
@@ -139,82 +139,14 @@ prompt_text = r"""
       "title": "Load LoRA"
     }
   },
-  "42": {
+  "48": {
     "inputs": {
-      "upscale_method": "nearest-exact",
-      "scale_by": 0.125,
-      "image": [
-        "25",
-        0
-      ]
+      "image": "1723212946981.jpg",
+      "upload": "image"
     },
-    "class_type": "ImageScaleBy",
+    "class_type": "LoadImage",
     "_meta": {
-      "title": "Upscale Image By"
-    }
-  },
-  "43": {
-    "inputs": {
-      "images": [
-        "42",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "Preview Image"
-    }
-  },
-  "44": {
-    "inputs": {
-      "filename_prefix": "pixelbuildings128-v1-downscale-x8-",
-      "images": [
-        "42",
-        0
-      ]
-    },
-    "class_type": "SaveImage",
-    "_meta": {
-      "title": "Save Image"
-    }
-  },
-  "45": {
-    "inputs": {
-      "upscale_method": "nearest-exact",
-      "scale_by": 8,
-      "image": [
-        "42",
-        0
-      ]
-    },
-    "class_type": "ImageScaleBy",
-    "_meta": {
-      "title": "Upscale Image By"
-    }
-  },
-  "46": {
-    "inputs": {
-      "images": [
-        "45",
-        0
-      ]
-    },
-    "class_type": "PreviewImage",
-    "_meta": {
-      "title": "Preview Image"
-    }
-  },
-  "47": {
-    "inputs": {
-      "filename_prefix": "pixelbuildings128-v1-upscale-x8-",
-      "images": [
-        "45",
-        0
-      ]
-    },
-    "class_type": "SaveImage",
-    "_meta": {
-      "title": "Save Image"
+      "title": "Load Image"
     }
   },
   "49": {
@@ -240,7 +172,8 @@ prompt_text = r"""
       "character_threshold": 0.8,
       "replace_underscore": false,
       "trailing_comma": false,
-      "exclude_tags": "realistic",
+      "exclude_tags": "realistic, lips",
+      "tags": "solo, looking_at_viewer, short_hair, shirt, black_hair, 1boy, closed_mouth, white_shirt, male_focus, black_eyes, shadow, letterboxed, portrait, nose",
       "image": [
         "68",
         0
@@ -259,8 +192,9 @@ prompt_text = r"""
         "50",
         0
       ],
-      "text_b": "solo, face_focus, clean_lines, symmetrical_features, no_textures, no_gradients, retro_style, sharp_edges, high_contrast_shading, flat_colors, young",
-      "text_c": ""
+      "text_b": "solo, face_focus, clean_lines, symmetrical_features, no_textures, no_gradients, retro_style, sharp_edges, high_contrast_shading, flat_colors, young, small lips",
+      "text_c": "",
+      "result": "solo, looking_at_viewer, short_hair, shirt, black_hair, 1boy, closed_mouth, white_shirt, male_focus, black_eyes, shadow, letterboxed, portrait, nose, solo, face_focus, clean_lines, symmetrical_features, no_textures, no_gradients, retro_style, sharp_edges, high_contrast_shading, flat_colors, young, small lips"
     },
     "class_type": "StringFunction|pysssss",
     "_meta": {
@@ -290,7 +224,7 @@ prompt_text = r"""
   },
   "54": {
     "inputs": {
-      "control_net_name": "SDXL\\diffusion_pytorch_model.fp16(1).safetensors"
+      "control_net_name": "diffusion_pytorch_model.safetensors"
     },
     "class_type": "ControlNetLoader",
     "_meta": {
@@ -314,7 +248,7 @@ prompt_text = r"""
       "upscale_method": "nearest-exact",
       "crop": "disabled",
       "image": [
-        "80",
+        "76",
         0
       ]
     },
@@ -325,10 +259,10 @@ prompt_text = r"""
   },
   "76": {
     "inputs": {
-      "crop_padding_factor": 0.45,
+      "crop_padding_factor": 0.47000000000000003,
       "cascade_xml": "lbpcascade_animeface.xml",
       "image": [
-        "25",
+        "48",
         0
       ]
     },
@@ -340,7 +274,7 @@ prompt_text = r"""
   "78": {
     "inputs": {
       "images": [
-        "76",
+        "79",
         0
       ]
     },
@@ -352,7 +286,7 @@ prompt_text = r"""
   "79": {
     "inputs": {
       "image": [
-        "76",
+        "25",
         0
       ]
     },
@@ -498,7 +432,7 @@ class ComfyUIClient:
 def main(image_path,output_path):
     # Initialize client
     client_id = "client_123"  # replace with actual client ID
-    server_address = "127.0.0.1:8188"  # replace with the server address
+    server_address = "overflow.orangegroup.systems:8188"  # replace with the server address
     client = ComfyUIClient(server_address, client_id, output_path)
     
     try:

@@ -13,10 +13,14 @@ mixer.init()
 pygame.init()
 
 # Create the game window
-SCREEN_WIDTH = 1000
-SCREEN_HEIGHT = 600
+
+# Get the screen width and height of the computer
+infoObject = pygame.display.Info()
+SCREEN_WIDTH = infoObject.current_w
+SCREEN_HEIGHT = infoObject.current_h
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Brawler")
+
+pygame.display.set_caption("Photo Fighter")
 
 # Set frame rate
 clock = pygame.time.Clock()
