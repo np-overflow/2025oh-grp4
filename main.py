@@ -204,9 +204,9 @@ while run:
                 draw_win_bg()
 
                 if score[0] > score[1]:
-                    win_player = pygame.transform.scale(pygame.image.load("image1.png").convert(), (200, 200))
+                    win_player = pygame.transform.scale(pygame.image.load("image1_processed.png").convert(), (200, 200))
                 else:
-                    win_player = pygame.transform.scale(pygame.image.load("image2.png").convert(), (200, 200))
+                    win_player = pygame.transform.scale(pygame.image.load("image2_processed.png").convert(), (200, 200))
                 
                 screen.blit(win_player, win_player.get_rect(center = screen.get_rect().center))
                 draw_text(f"Player {1 if score[0] > score[1] else 2}", count_font, RED, 370, 400)
