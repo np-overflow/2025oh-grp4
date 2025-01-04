@@ -52,6 +52,7 @@ class PhotoSelectorApp:
         file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png")])
         if file_path:
             img = Image.open(file_path)
+            self.captured_frame = cv2.cvtColor(cv2.imread(file_path), cv2.COLOR_BGR2RGB)  # Save for future use
 
             # Resize the image dynamically based on label size
             label_width = int(self.root.winfo_width() * 0.4)
@@ -82,12 +83,13 @@ class PhotoSelectorApp:
 
     def submit_photo(self):
         # Save the captured image if it exists
-        if hasattr(self, 'captured_frame'):
+        if hasattr(self, 'captured_frame') and self.captured_image_label.cget("text") != "No image to save.":
             img = Image.fromarray(self.captured_frame)
             img.save(f"{self.filepath}")
             self.captured_image_label.config(text="Image saved as image_1.jpg")
             self.captured_image_label.update()
         else:
+            print('nothing')
             self.captured_image_label.config(text="No image to save.")
             self.captured_image_label.update()
         

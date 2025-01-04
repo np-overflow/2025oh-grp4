@@ -13,7 +13,7 @@ prompt_text = r"""
 {
   "3": {
     "inputs": {
-      "seed": 757104452853590,
+      "seed": 718737532262803,
       "steps": 40,
       "cfg": 12,
       "sampler_name": "euler_ancestral",
@@ -139,16 +139,6 @@ prompt_text = r"""
       "title": "Load LoRA"
     }
   },
-  "48": {
-    "inputs": {
-      "image": "1723212946981.jpg",
-      "upload": "image"
-    },
-    "class_type": "LoadImage",
-    "_meta": {
-      "title": "Load Image"
-    }
-  },
   "49": {
     "inputs": {
       "pixels": [
@@ -262,7 +252,7 @@ prompt_text = r"""
       "crop_padding_factor": 0.47000000000000003,
       "cascade_xml": "lbpcascade_animeface.xml",
       "image": [
-        "48",
+        "80",
         0
       ]
     },
