@@ -40,11 +40,11 @@ ROUND_OVER_COOLDOWN = 2000
 
 # Fighter variables (example data)
 WARRIOR_SIZE = 162
-WARRIOR_SCALE = 4
+WARRIOR_SCALE = 6
 WARRIOR_OFFSET = [72, 56]
 WARRIOR_DATA = [WARRIOR_SIZE, WARRIOR_SCALE, WARRIOR_OFFSET]
 WIZARD_SIZE = 250
-WIZARD_SCALE = 3
+WIZARD_SCALE = 4.5
 WIZARD_OFFSET = [112, 107]
 WIZARD_DATA = [WIZARD_SIZE, WIZARD_SCALE, WIZARD_OFFSET]
 
@@ -131,7 +131,7 @@ main(photo_path_2,"image2_processed.png")
 # Load the image for the box
 box_image_1 = pygame.image.load("image1_processed.png").convert_alpha()
 box_image_2 = pygame.image.load("image2_processed.png").convert_alpha()
-box_size = 50
+box_size = 90
 scaled_box_image_1 = pygame.transform.scale(box_image_1, (box_size, box_size))
 scaled_box_image_2 = pygame.transform.scale(box_image_2, (box_size, box_size))
 
@@ -139,6 +139,25 @@ scaled_box_image_2 = pygame.transform.scale(box_image_2, (box_size, box_size))
 run = True
 start_time = pygame.time.get_ticks()
 
+# Constants for dynamic positioning
+HEALTH_BAR_WIDTH = 200  # Width of the health bar
+HEALTH_BAR_HEIGHT = 20  # Height of the health bar
+MARGIN = 20             # Margin from the edge of the screen
+
+# Dynamic starting positions for fighters
+fighter_1_start_x = SCREEN_WIDTH // 4  # 25% of the screen width
+fighter_2_start_x = SCREEN_WIDTH * 3 // 4  # 75% of the screen width
+fighter_start_y = SCREEN_HEIGHT - 150  # Fixed offset from bottom of the screen
+
+# Initialize fighters
+fighter_1 = Fighter(1, fighter_1_start_x, fighter_start_y, False, WARRIOR_DATA, warrior_sheet, WARRIOR_ANIMATION_STEPS, sword_fx)
+fighter_2 = Fighter(2, fighter_2_start_x, fighter_start_y, True, WIZARD_DATA, wizard_sheet, WIZARD_ANIMATION_STEPS, magic_fx)
+
+
+middle_image = pygame.image.load("helper.png").convert_alpha()  # Replace with your actual file path
+desired_width = middle_image.get_width() /7.5
+desired_height = middle_image.get_height()/7.5
+middle_image = pygame.transform.smoothscale(middle_image, (desired_width, desired_height))
 while run:
     clock.tick(FPS)
 
@@ -149,11 +168,28 @@ while run:
     # Draw background
     draw_bg()
 
+    # Dynamic health bar and score positions
+    health_bar_1_x = MARGIN
+    health_bar_1_y = MARGIN 
+    health_bar_2_x = SCREEN_WIDTH - HEALTH_BAR_WIDTH*2 - MARGIN
+    health_bar_2_y = MARGIN
+    score_1_x = MARGIN
+    score_1_y = HEALTH_BAR_HEIGHT + MARGIN * 2
+    score_2_x = SCREEN_WIDTH - HEALTH_BAR_WIDTH*2 - MARGIN
+    score_2_y = HEALTH_BAR_HEIGHT + MARGIN * 2
+
+    # Calculate the position to place the image between the health bars
+    middle_image_x = (health_bar_1_x + health_bar_2_x + HEALTH_BAR_WIDTH) // 2 - desired_width // 2 + 100
+    middle_image_y = MARGIN + (HEALTH_BAR_HEIGHT // 2) - (desired_height // 2) + 60
+
+
+    # Draw the PNG image between the health bars
+    screen.blit(middle_image, (middle_image_x, middle_image_y))
     # Show player stats
-    draw_health_bar(fighter_1.health, 20, 20)
-    draw_health_bar(fighter_2.health, 580, 20)
-    draw_text("P1: " + str(score[0]), score_font, RED, 20, 60)
-    draw_text("P2: " + str(score[1]), score_font, RED, 580, 60)
+    draw_health_bar(fighter_1.health, health_bar_1_x, health_bar_1_y)
+    draw_health_bar(fighter_2.health, health_bar_2_x, health_bar_2_y)
+    draw_text("P1: " + str(score[0]), score_font, RED, score_1_x, score_1_y)
+    draw_text("P2: " + str(score[1]), score_font, RED, score_2_x, score_2_y)
 
     if intro_count <= 0:
         fighter_1.move(SCREEN_WIDTH, SCREEN_HEIGHT, screen, fighter_2, round_over)
@@ -172,20 +208,22 @@ while run:
     fighter_1.draw(screen)
     fighter_2.draw(screen)
 
-    height_offset = 80  # Base height offset
+    # Dynamic bobbing box positions
+    height_offset = 60  # Base height offset
 
     # Draw image-filled box on fighter_1's body with bobbing effect
-    body_x = fighter_1.rect.centerx
-    body_y = fighter_1.rect.centery
-    box_y = body_y - box_size // 2 - height_offset + bob_offset
-    screen.blit(scaled_box_image_1, (body_x - box_size // 2, box_y))
+    body_x_1 = fighter_1.rect.centerx
+    body_y_1 = fighter_1.rect.centery
+    box_y_1 = body_y_1 - box_size // 2 - height_offset + bob_offset
+    screen.blit(scaled_box_image_1, (body_x_1 - box_size // 2+20, box_y_1))
 
     # Draw image-filled box on fighter_2's body with bobbing effect
-    body_x = fighter_2.rect.centerx
-    body_y = fighter_2.rect.centery
-    box_y = body_y - box_size // 2 - height_offset + bob_offset + 10
-    screen.blit(scaled_box_image_2, (body_x - box_size // 2, box_y))
+    body_x_2 = fighter_2.rect.centerx
+    body_y_2 = fighter_2.rect.centery
+    box_y_2 = body_y_2 - box_size // 2 - height_offset + bob_offset + 10
+    screen.blit(scaled_box_image_2, (body_x_2 - box_size // 2 +20, box_y_2))
 
+    # Check for round over conditions
     if not round_over:
         if not fighter_1.alive:
             score[1] += 1
@@ -198,23 +236,21 @@ while run:
             round_over_time = pygame.time.get_ticks()
             scaled_box_image_2.fill((0, 0, 0, 0))
     else:
-        screen.blit(victory_img, (360, 150))
+        screen.blit(victory_img, (SCREEN_WIDTH // 2 - victory_img.get_width() // 2, 150))
         if pygame.time.get_ticks() - round_over_time > ROUND_OVER_COOLDOWN:
             if score[0] + score[1] == 3:
                 draw_win_bg()
-
                 if score[0] > score[1]:
                     win_player = pygame.transform.scale(pygame.image.load("image1_processed.png").convert(), (200, 200))
                 else:
                     win_player = pygame.transform.scale(pygame.image.load("image2_processed.png").convert(), (200, 200))
-                
-                screen.blit(win_player, win_player.get_rect(center = screen.get_rect().center))
-                draw_text(f"Player {1 if score[0] > score[1] else 2}", count_font, RED, 370, 400)
+                screen.blit(win_player, win_player.get_rect(center=screen.get_rect().center))
+                draw_text(f"Player {1 if score[0] > score[1] else 2}", count_font, RED, SCREEN_WIDTH // 2 - 30, 400)
             else:
                 round_over = False
                 intro_count = 4
-                fighter_1 = Fighter(1, 200, 310, False, WARRIOR_DATA, warrior_sheet, WARRIOR_ANIMATION_STEPS, sword_fx)
-                fighter_2 = Fighter(2, 700, 310, True, WIZARD_DATA, wizard_sheet, WIZARD_ANIMATION_STEPS, magic_fx)
+                fighter_1 = Fighter(1, fighter_1_start_x, fighter_start_y, False, WARRIOR_DATA, warrior_sheet, WARRIOR_ANIMATION_STEPS, sword_fx)
+                fighter_2 = Fighter(2, fighter_2_start_x, fighter_start_y, True, WIZARD_DATA, wizard_sheet, WIZARD_ANIMATION_STEPS, magic_fx)
                 scaled_box_image_1 = pygame.transform.scale(box_image_1, (box_size, box_size))
                 scaled_box_image_2 = pygame.transform.scale(box_image_2, (box_size, box_size))
 
