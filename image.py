@@ -1,6 +1,6 @@
-# photo_selector_with_camera.py
 import tkinter as tk
 from tkinter import *
+from tkinter import filedialog
 from PIL import Image, ImageTk
 import cv2
 import subprocess
@@ -12,20 +12,24 @@ class PhotoSelectorApp:
         self.cap = cv2.VideoCapture(0)  # Initialize webcam
 
         # Camera feed canvas
-        self.camera_canvas = Canvas(self.root, width=400, height=300, bg="black")
-        self.camera_canvas.grid(row=0, column=0, padx=10, pady=10)
+        self.camera_canvas = Canvas(self.root, bg="black")
+        self.camera_canvas.place(relx=0.05, rely=0.05, relwidth=0.4, relheight=0.4)
 
         # Captured image display
-        self.captured_image_label = Label(self.root, text="Captured Image", bg="gray", width=40, height=15)
-        self.captured_image_label.grid(row=0, column=1, padx=10, pady=10)
+        self.captured_image_label = Label(self.root, text="Captured Image", bg="gray")
+        self.captured_image_label.place(relx=0.55, rely=0.05, relwidth=0.4, relheight=0.4)
 
         # Capture button
         self.capture_button = Button(self.root, text="Capture", command=self.capture_image)
-        self.capture_button.grid(row=1, column=0, pady=10)
+        self.capture_button.place(relx=0.05, rely=0.5, relwidth=0.2, relheight=0.1)
+
+        # Select photo button
+        self.select_photo_button = Button(self.root, text="Select Photo", command=self.select_photo)
+        self.select_photo_button.place(relx=0.3, rely=0.5, relwidth=0.2, relheight=0.1)
 
         # Proceed button
         self.proceed_button = Button(self.root, text="Proceed", command=self.submit_photo)
-        self.proceed_button.grid(row=1, column=1, pady=10)
+        self.proceed_button.place(relx=0.55, rely=0.5, relwidth=0.4, relheight=0.1)
 
         # Start the camera feed update loop
         self.update_camera_view()
@@ -44,18 +48,32 @@ class PhotoSelectorApp:
 
         self.root.after(10, self.update_camera_view)  # Update every 10 ms
 
+    def select_photo(self):
+        file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.jpg *.jpeg *.png")])
+        if file_path:
+            img = Image.open(file_path)
 
-    def close_app(self):
-        self.cap.release()  # Release the webcam
-        self.root.destroy()
-        
+            # Resize the image dynamically based on label size
+            label_width = int(self.root.winfo_width() * 0.4)
+            label_height = int(self.root.winfo_height() * 0.4)
+            img.thumbnail((label_width, label_height))
+
+            # Update the captured image label
+            imgtk = ImageTk.PhotoImage(img)
+            self.captured_image_label.config(image=imgtk)
+            self.captured_image_label.image = imgtk  # Keep reference to avoid garbage collection
+
     def capture_image(self):
         ret, frame = self.cap.read()
         if ret:
             # Convert the frame to a PIL image
             self.captured_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)  # Save for future use
             img = Image.fromarray(self.captured_frame)
-            img.thumbnail((300, 300))  # Resize the image for the label
+
+            # Resize the image dynamically based on label size
+            label_width = int(self.root.winfo_width() * 0.4)
+            label_height = int(self.root.winfo_height() * 0.4)
+            img.thumbnail((label_width, label_height))
 
             # Update the captured image label
             imgtk = ImageTk.PhotoImage(img)
@@ -78,13 +96,10 @@ class PhotoSelectorApp:
         self.root.destroy()
 
 
-
 def create_ui(filepath):
     root = tk.Tk()
     root.title("Photo Selector for Player 1")
-    root.geometry("800x600")  # Fixed size
-    root.resizable(False, False)
-    centre_window(root)
+    root.attributes('-fullscreen', True)  # Full screen
     app = PhotoSelectorApp(root, filepath)
     root.mainloop()
 
@@ -103,14 +118,11 @@ def centre_window(window):
 def main_screen():
     root = tk.Tk()
     root.title("Main Menu")
-    root.geometry("800x600")  # Fixed size
-    #root.resizable(False, False)
-    centre_window(root)
+    root.attributes('-fullscreen', True)  # Full screen
 
     # Create a button to start the photo selection process
     button = Button(root, text="START", font=("Segoe UI", 20), command=lambda: subprocess.run(["python", "main.py"]))
     button.place(relx=0.5, rely=0.5, anchor=CENTER)
-    #button.pack()
 
     root.mainloop()
 
