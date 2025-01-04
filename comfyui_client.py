@@ -13,7 +13,7 @@ prompt_text = r"""
 {
   "3": {
     "inputs": {
-      "seed": 718737532262803,
+      "seed": 895284224650439,
       "steps": 40,
       "cfg": 12,
       "sampler_name": "euler_ancestral",
@@ -24,12 +24,12 @@ prompt_text = r"""
         0
       ],
       "positive": [
-        "52",
+        "82",
         0
       ],
       "negative": [
-        "7",
-        0
+        "82",
+        1
       ],
       "latent_image": [
         "49",
@@ -162,8 +162,8 @@ prompt_text = r"""
       "character_threshold": 0.8,
       "replace_underscore": false,
       "trailing_comma": false,
-      "exclude_tags": "realistic, lips",
-      "tags": "solo, looking_at_viewer, short_hair, shirt, black_hair, 1boy, closed_mouth, white_shirt, male_focus, black_eyes, shadow, letterboxed, portrait, nose",
+      "exclude_tags": "realistic, lips, letterboxed",
+      "tags": "",
       "image": [
         "68",
         0
@@ -184,32 +184,11 @@ prompt_text = r"""
       ],
       "text_b": "solo, face_focus, clean_lines, symmetrical_features, no_textures, no_gradients, retro_style, sharp_edges, high_contrast_shading, flat_colors, young, small lips",
       "text_c": "",
-      "result": "solo, looking_at_viewer, short_hair, shirt, black_hair, 1boy, closed_mouth, white_shirt, male_focus, black_eyes, shadow, letterboxed, portrait, nose, solo, face_focus, clean_lines, symmetrical_features, no_textures, no_gradients, retro_style, sharp_edges, high_contrast_shading, flat_colors, young, small lips"
+      "result": ""
     },
     "class_type": "StringFunction|pysssss",
     "_meta": {
       "title": "String Function 🐍"
-    }
-  },
-  "52": {
-    "inputs": {
-      "strength": 1,
-      "conditioning": [
-        "6",
-        0
-      ],
-      "control_net": [
-        "54",
-        0
-      ],
-      "image": [
-        "68",
-        0
-      ]
-    },
-    "class_type": "ControlNetApply",
-    "_meta": {
-      "title": "Apply ControlNet (OLD)"
     }
   },
   "54": {
@@ -305,6 +284,37 @@ prompt_text = r"""
     "class_type": "ETN_SendImageWebSocket",
     "_meta": {
       "title": "Send Image (WebSocket)"
+    }
+  },
+  "82": {
+    "inputs": {
+      "strength": 1,
+      "start_percent": 0,
+      "end_percent": 1,
+      "positive": [
+        "6",
+        0
+      ],
+      "negative": [
+        "7",
+        0
+      ],
+      "control_net": [
+        "54",
+        0
+      ],
+      "image": [
+        "68",
+        0
+      ],
+      "vae": [
+        "4",
+        2
+      ]
+    },
+    "class_type": "ControlNetApplyAdvanced",
+    "_meta": {
+      "title": "Apply ControlNet"
     }
   }
 }
@@ -432,7 +442,6 @@ def main(image_path,output_path):
             encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
 
         prompt = json.loads(prompt_text)
-        prompt["7"]["inputs"]["text"] = "low quality, blurry, deformed, watermark, text, signature, depth of field, photoreal, realistic, closed_eyes, old, wrinkles"
         prompt["3"]["inputs"]["seed"] = random.randint(0, 2**32 - 1)
         prompt["80"]["inputs"]["image"] = encoded_string
 
