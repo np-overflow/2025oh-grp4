@@ -11,6 +11,15 @@ class PhotoSelectorApp:
         self.root = root
         self.cap = cv2.VideoCapture(0)  # Initialize webcam
 
+        # Load a background image
+        self.background_image = Image.open("start_bg.jpeg")  # Replace with your background image path
+        self.background_image = self.background_image.resize((root.winfo_screenwidth(), root.winfo_screenheight()))
+        self.background_photo = ImageTk.PhotoImage(self.background_image)
+
+        # Add background label
+        self.background_label = Label(self.root, image=self.background_photo)
+        self.background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
         # Camera feed canvas
         self.camera_canvas = Canvas(self.root, width=400, height=300, bg="black")
         self.camera_canvas.grid(row=0, column=0, padx=10, pady=10)
@@ -106,7 +115,19 @@ def main_screen():
     root.geometry("800x600")  # Fixed size
     #root.resizable(False, False)
     centre_window(root)
+    # Load a background image
+    background_image = Image.open("start_bg.jpeg")  # Replace with your start screen background image path
+    background_image = background_image.resize((root.winfo_screenwidth(), root.winfo_screenheight()))
+    background_photo = ImageTk.PhotoImage(background_image)
 
+    # Add background label
+    background_label = Label(root, image=background_photo)
+    background_label.place(x=0, y=0, relwidth=1, relheight=1)
+    
+    # Add title label
+    title_label = Label(root, text="Welcome to Campus Champions", font=("Comic Sans MS", 32, "bold"), fg="red")
+
+    title_label.place(relx=0.5, rely=0.4, anchor=CENTER)
     # Create a button to start the photo selection process
     button = Button(root, text="START", font=("Segoe UI", 20), command=lambda: subprocess.run(["python", "main.py"]))
     button.place(relx=0.5, rely=0.5, anchor=CENTER)
