@@ -9,7 +9,17 @@ class PhotoSelectorApp:
     def __init__(self, root, filepath):
         self.filepath = filepath
         self.root = root
-        self.cap = cv2.VideoCapture(0)  # Initialize webcam
+        self.cap = cv2.VideoCapture(0)  # Initialize webcam\
+
+        # Load a background image
+        self.background_image = Image.open("assets/images/background/nowords.jpg")  # Replace with your background image path
+        self.background_image = self.background_image.resize((root.winfo_screenwidth(), root.winfo_screenheight()))
+        self.background_photo = ImageTk.PhotoImage(self.background_image)
+
+        # Add background label
+        self.background_label = Label(self.root, image=self.background_photo)
+        self.background_label.place(x=0, y=0, relwidth=1, relheight=1)
+
 
         # Camera feed canvas
         self.camera_canvas = Canvas(self.root, bg="black")
@@ -121,6 +131,16 @@ def main_screen():
     root = tk.Tk()
     root.title("Main Menu")
     root.attributes('-fullscreen', True)  # Full screen
+
+
+    # Load a background image
+    background_image = Image.open("assets/images/background/start_bg.jpg")  # Replace with your start screen background image path
+    background_image = background_image.resize((root.winfo_screenwidth(), root.winfo_screenheight()))
+    background_photo = ImageTk.PhotoImage(background_image)
+
+    # Add background label
+    background_label = Label(root, image=background_photo)
+    background_label.place(x=0, y=0, relwidth=1, relheight=1)
 
     # Create a button to start the photo selection process
     button = Button(root, text="START", font=("Segoe UI", 20), command=lambda: subprocess.run(["python", "main.py"]))

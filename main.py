@@ -5,6 +5,11 @@ from fighter import Fighter
 import math
 from image import create_ui  # Import the photo selector
 from comfyui_client import main
+import tkinter as tk
+from tkinter import PhotoImage
+import threading
+import time
+from PIL import Image, ImageTk  # Pillow library
 # remove imaege1.png and image2.png
 
 
@@ -124,9 +129,53 @@ else:
 fighter_1 = Fighter(1, 200, 310, False, WARRIOR_DATA, warrior_sheet, WARRIOR_ANIMATION_STEPS, sword_fx)
 fighter_2 = Fighter(2, 700, 310, True, WIZARD_DATA, wizard_sheet, WIZARD_ANIMATION_STEPS, magic_fx)
 
+# Below process will take some time to process the image, so to open a window to show an loading screen image using tkinter
+def run_tkinter():
+    """Function to run the Tkinter GUI."""
+    window = tk.Tk()
+    window.title("Image Viewer")
+
+    # Set a desired maximum size for the image
+    max_width, max_height = SCREEN_WIDTH*0.8, SCREEN_HEIGHT*0.8
+
+    try:
+        # Open and resize the image
+        original_image = Image.open(r"assets\images\background\the_tech_overflow_openhouse_stablediffusion.png")  # Replace with your image path
+        original_width, original_height = original_image.size
+        
+        # Calculate the resize ratio while preserving aspect ratio
+        resize_ratio = min(max_width / original_width, max_height / original_height)
+        new_width = int(original_width * resize_ratio)
+        new_height = int(original_height * resize_ratio)
+        
+        # Resize the image
+        resized_image = original_image.resize((new_width, new_height), Image.LANCZOS)
+        image = ImageTk.PhotoImage(resized_image)
+        
+        # Display the resized image
+        image_label = tk.Label(window, image=image)
+        image_label.image = image  # Keep a reference to avoid garbage collection
+        image_label.pack()
+    except Exception as e:
+        print(f"Failed to load image: {e}")
+        error_label = tk.Label(window, text="Failed to load image")
+        error_label.pack()
+
+    # Add a dismiss button
+    dismiss_button = tk.Button(window, text="Dismiss", command=window.destroy)
+    dismiss_button.pack()
+
+    # Run the Tkinter event loop
+    window.mainloop()
+# Start the Tkinter GUI in a separate thread
+tk_thread = threading.Thread(target=run_tkinter, daemon=True)
+tk_thread.start()
+
 # Process the photo image for the fighters
 main(photo_path_1,"image1_processed.png")
 main(photo_path_2,"image2_processed.png")
+
+
 
 # Load the image for the box
 box_image_1 = pygame.image.load("image1_processed.png").convert_alpha()
