@@ -87,7 +87,7 @@ class Fighter():
           self.vel_y = -30
           self.jump = True
         #attack
-        if key[pygame.K_u] or key[pygame.K_i]:
+        if key[pygame.K_LEFTBRACKET] or key[pygame.K_RIGHTBRACKET]:
           self.attack(target)
           #determine which attack type was used
           if key[pygame.K_LEFTBRACKET]:
